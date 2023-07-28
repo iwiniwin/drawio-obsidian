@@ -21,6 +21,7 @@ import {
   TFile,
   TFolder,
   WorkspaceLeaf,
+  Notice,
 } from "obsidian";
 import DiagramView from "./DiagramView";
 import {
@@ -33,11 +34,9 @@ import { WelcomeModal } from "./WelcomeModal";
 
 export default class DiagramPlugin extends Plugin {
   public settings: DiagramPluginSettings;
-  private isFileExplorerButtonPresent: boolean;
 
   constructor(app: App, manifest: PluginManifest) {
     super(app, manifest);
-    this.isFileExplorerButtonPresent = false;
   }
 
   private registerViewFactory(
@@ -72,7 +71,6 @@ export default class DiagramPlugin extends Plugin {
     this.registerExtensionsReplace(["drawio"], DIAGRAM_EDIT_VIEW_TYPE);
     this.registerEvents();
     this.addSettingTab(new DiagramSettingsTab(this.app, this));
-    this.tryAddFileExplorerButton();
     // Show the welcome modal the first time the plugin is run
     if (this.settings.welcomeComplete !== true) {
       const welcome = new WelcomeModal(this.app, this);
@@ -99,65 +97,11 @@ export default class DiagramPlugin extends Plugin {
 
   private registerEvents() {
     this.registerEvent(
-      this.app.internalPlugins.on(
-        "change",
-        this.handleInternalPluginsChange,
-        this
-      )
-    );
-    this.registerEvent(
       this.app.workspace.on("file-menu", this.handleFileMenu, this)
     );
-    this.registerEvent(
-      this.app.workspace.on("editor-menu", this.handleEditorMenu, this)
-    );
-    this.registerEvent(
-      this.app.workspace.on("layout-change", this.handleLayoutChange, this)
-    );
-  }
-
-  private tryAddFileExplorerButton() {
-    if (
-      this.isFileExplorerButtonPresent ||
-      !this.app.internalPlugins.plugins["file-explorer"].enabled
-    ) {
-      return;
-    }
-
-    const fileExplorerLeaf =
-      this.app.workspace.getLeavesOfType("file-explorer")[0];
-    if (fileExplorerLeaf && "headerDom" in fileExplorerLeaf.view) {
-      const fileExplorerView = fileExplorerLeaf.view as FileExplorerView;
-      const buttonElement = fileExplorerView.headerDom.addNavButton(
-        "diagram",
-        "New diagram",
-        this.editNewDiagramFile.bind(this)
-      );
-      const parentElement: Element = buttonElement.parentElement;
-      parentElement.insertBefore(
-        buttonElement,
-        parentElement.childNodes[1] || parentElement.firstChild
-      );
-      // Remove the button if the plugin is unloaded
-      this.register(() => {
-        parentElement.removeChild(buttonElement);
-      });
-      this.isFileExplorerButtonPresent = true;
-    }
-  }
-
-  private handleLayoutChange() {
-    this.tryAddFileExplorerButton();
-  }
-
-  private handleInternalPluginsChange(plugin: PluginRegistration) {
-    if (plugin.instance.id === "file-explorer") {
-      if (plugin.enabled) {
-        this.tryAddFileExplorerButton();
-      } else {
-        this.isFileExplorerButtonPresent = false;
-      }
-    }
+    // this.registerEvent(
+    //   this.app.workspace.on("editor-menu", this.handleEditorMenu, this)
+    // );
   }
 
   private handleEditorMenu(menu: Menu, editor: Editor, view: MarkdownView) {
@@ -187,9 +131,7 @@ export default class DiagramPlugin extends Plugin {
       if (this.isDiagramFileExtension(abstractFile)) {
         // User clicked on an a diagram
         menu.addItem((item: MenuItem) => {
-          this.moveMenuItem(menu, item, 0);
-          item
-            .setTitle("Edit diagram")
+          item.setTitle("Edit Diagram")
             .setIcon("diagram")
             .onClick(async () => {
               // Open the editor in a horizontal split if this is the link context menu
@@ -200,14 +142,22 @@ export default class DiagramPlugin extends Plugin {
               });
             });
         });
+        menu.addItem((item: MenuItem) => {
+          item.setTitle("复制 Diagram 链接")
+            .setIcon("diagram")
+            .onClick(async () => {
+              const { clipboard } = require('electron');
+              const text = `![[${abstractFile.path}]]`;
+              clipboard.writeText(text);
+              new Notice(`Copied ${text}`);
+            });
+        });
       }
     } else if (abstractFile instanceof TFolder) {
       // User clicked on a folder
       menu.addItem((item: MenuItem) => {
-        this.moveMenuItem(menu, item, 1);
-        item
-          .setTitle("New diagram")
-          .setIcon("create-new-diagram")
+        item.setTitle("新建 Diagram 绘图")
+          .setIcon("diagram")
           .onClick(async () => {
             const file = await this.createNewDiagramFile(abstractFile);
             const leaf = this.app.workspace.getLeaf(false);

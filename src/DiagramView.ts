@@ -15,7 +15,7 @@ export default class DiagramView extends DiagramViewBase {
   async onload() {
     super.onload();
     this.contentEl.classList.add("diagram-view");
-    this.editActionElement = this.addAction("pencil", "Edit diagram", () => {
+    this.editActionElement = this.addAction("pencil", "Edit Diagram", () => {
       if (this.isEditable) {
         this.setEditView();
       }
@@ -35,6 +35,10 @@ export default class DiagramView extends DiagramViewBase {
     const template = document.createElement("template");
     template.innerHTML = fileData;
     this.contentEl.empty();
+    // 使内容显示居中
+    this.contentEl.style.display = "flex";
+    this.contentEl.style.justifyContent = "center";
+    this.contentEl.style.alignItems = "center";
     this.contentEl.appendChild(template.content);
 
     this.isEditable = await this.isDrawioFile(file);
