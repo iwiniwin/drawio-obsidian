@@ -23,6 +23,7 @@ import {
   WorkspaceLeaf,
   Notice,
   EditableFileView,
+  KeymapContext,
 } from "obsidian";
 import DiagramView from "./DiagramView";
 import {
@@ -99,6 +100,26 @@ export default class DiagramPlugin extends Plugin {
   private registerEvents() {
     this.registerEvent(
       this.app.workspace.on("file-menu", this.handleFileMenu, this)
+    );
+    this.registerScopeEvent(
+      this.app.scope.register(
+        ["Alt"],
+        "R",
+        (evt: KeyboardEvent, ctx: KeymapContext) => {
+          const diagramView = this.app.workspace.getActiveViewOfType(DiagramView);
+          if(diagramView != null)
+          {
+            diagramView.setEditView();
+            return false;
+          }
+          const activeEditView = this.app.workspace.getActiveViewOfType(DiagramEditView);
+          if(activeEditView != null) {
+            activeEditView.setImageView();
+            return false;
+          }
+          return true;
+        }
+      )
     );
     // this.registerEvent(
     //   this.app.workspace.on("editor-menu", this.handleEditorMenu, this)

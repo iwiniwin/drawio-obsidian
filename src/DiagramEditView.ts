@@ -1,4 +1,4 @@
-import { LoadProgress, TFile, ViewState, WorkspaceLeaf } from "obsidian";
+import { LoadProgress, TFile, ViewState, WorkspaceLeaf, KeymapContext } from "obsidian";
 import DiagramPlugin from "./DiagramPlugin";
 import DiagramViewBase from "./DiagramViewBase";
 import { DIAGRAM_EDIT_VIEW_TYPE, DIAGRAM_VIEW_TYPE } from "./constants";
@@ -8,6 +8,7 @@ import DrawioClient, {
   StateChangeEvent,
 } from "./DrawioClient";
 import DiagramView from "./DiagramView";
+import * as path from "path";
 
 const FILE_EXTENSIONS = ["svg"];
 
@@ -72,7 +73,7 @@ export class DiagramEditView extends DiagramViewBase {
     return cssRules.join("\n");
   }
 
-  private async setImageView() {
+  async setImageView() {
     await this.leaf.setViewState({
       type: DIAGRAM_VIEW_TYPE,
       state: this.getState(),
@@ -102,7 +103,7 @@ export class DiagramEditView extends DiagramViewBase {
   }
 
   getDisplayText(): string {
-    return this.file?.name || "Diagram";
+    return this.file?.basename || "Diagram";
   }
 
   async onOpen() {
