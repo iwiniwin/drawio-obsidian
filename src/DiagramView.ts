@@ -1,20 +1,21 @@
-import { TFile, ViewState, WorkspaceLeaf } from "obsidian";
+import { MarkdownPreviewView, TFile, ViewState, WorkspaceLeaf, MarkdownView, MarkdownSourceView } from "obsidian";
 import { DIAGRAM_EDIT_VIEW_TYPE, DIAGRAM_VIEW_TYPE } from "./constants";
 import DiagramPlugin from "./DiagramPlugin";
 import DiagramViewBase from "./DiagramViewBase";
 
 const FILE_EXTENSIONS = ["svg"];
 
-export default class DiagramView extends DiagramViewBase {
+export default class DiagramView extends MarkdownView {
   editActionElement: HTMLElement;
   isEditable: boolean;
   constructor(leaf: WorkspaceLeaf, plugin: DiagramPlugin) {
-    super(leaf, plugin);
+    super(leaf);
   }
 
   async onload() {
     super.onload();
     this.contentEl.classList.add("diagram-view");
+    this.actionsEl.removeChild(this.actionsEl.firstChild);
     this.editActionElement = this.addAction("pencil", "Edit Diagram", () => {
       if (this.isEditable) {
         this.setEditView();
@@ -31,15 +32,7 @@ export default class DiagramView extends DiagramViewBase {
   }
 
   async onLoadFile(file: TFile) {
-    const fileData = await this.app.vault.read(file);
-    const template = document.createElement("template");
-    template.innerHTML = fileData;
-    this.contentEl.empty();
-    // 使内容显示居中
-    this.contentEl.style.display = "flex";
-    this.contentEl.style.justifyContent = "center";
-    this.contentEl.style.alignItems = "center";
-    this.contentEl.appendChild(template.content);
+    this.setViewData(`![[${file.path}]]`, true);
 
     this.isEditable = await this.isDrawioFile(file);
     if (this.isEditable) {
@@ -50,7 +43,7 @@ export default class DiagramView extends DiagramViewBase {
   }
 
   async onUnloadFile(file: TFile) {
-    this.contentEl.empty();
+    this.clear();
   }
 
   canAcceptExtension(extension: string) {

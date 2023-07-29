@@ -22,6 +22,7 @@ import {
   TFolder,
   WorkspaceLeaf,
   Notice,
+  EditableFileView,
 } from "obsidian";
 import DiagramView from "./DiagramView";
 import {
@@ -40,7 +41,7 @@ export default class DiagramPlugin extends Plugin {
   }
 
   private registerViewFactory(
-    View: new (leaf: WorkspaceLeaf, plugin: DiagramPlugin) => DiagramViewBase,
+    View: new (leaf: WorkspaceLeaf, plugin: DiagramPlugin) => EditableFileView,
     viewType: string
   ) {
     this.registerView(viewType, (leaf) => new View(leaf, this));

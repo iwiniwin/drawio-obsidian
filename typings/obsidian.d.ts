@@ -45,4 +45,9 @@ declare module "obsidian" {
     viewRegistry: ViewRegistry;
     loadProgress: LoadProgress;
   }
+  export interface MarkdownView {
+    actionsEl: HTMLElement;
+    editMode: MarkdownSubView;
+    isPlaintext: boolean;
+  }
 }
