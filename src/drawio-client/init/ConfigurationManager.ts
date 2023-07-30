@@ -245,7 +245,7 @@ export interface DrawioConfig {
 }
 
 const defaultConfiguration: DrawioConfig = {
-  defaultLibraries: "general",
+  defaultLibraries: "general;uml",
   libraries: [],
   // defaultEdgeStyle: {
   //   // strokeColor: "currentColor",
@@ -390,7 +390,7 @@ export class ConfigurationManager {
 
   private getDrawioConfig(settings: DiagramPluginSettings): DrawioConfig {
     return {
-      defaultLibraries: "general",
+      defaultLibraries: "general;uml",
       libraries: [],
       defaultEdgeStyle: this.getDefaultEdgeStyle(settings),
       defaultVertexStyle: this.getDefaultVertexStyle(settings),

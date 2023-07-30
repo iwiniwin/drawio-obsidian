@@ -22,6 +22,17 @@ export class DiagramEditView extends DiagramViewBase {
     this.loadProgress = createLoadProgress(this.app, this.contentEl);
   }
 
+  async onload() {
+    super.onload();
+    this.addAction("image-file", "Preview", () => {
+      this.setImageView();
+    });
+
+    this.contentEl.style.margin = "0";
+    this.contentEl.style.padding = "0";
+    this.contentEl.style.position = "relative";
+  }
+
   private async handleFileChange(event: FileChangeEvent) {
     await this.app.vault.modify(this.file, event.data);
 
@@ -107,6 +118,7 @@ export class DiagramEditView extends DiagramViewBase {
   }
 
   async onOpen() {
+    super.onOpen();
     this.loadProgress.setMessage(`Loading diagram editor`);
 
     const configuration = this.plugin.getDrawioConfiguration();
@@ -131,19 +143,10 @@ export class DiagramEditView extends DiagramViewBase {
   }
 
   async onClose() {
+    super.onClose();
     if (this.drawioClient) {
       this.drawioClient.destroy();
     }
     this.drawioClient = null;
-  }
-
-  async onload() {
-    this.addAction("image-file", "Preview", () => {
-      this.setImageView();
-    });
-
-    this.contentEl.style.margin = "0";
-    this.contentEl.style.padding = "0";
-    this.contentEl.style.position = "relative";
   }
 }
