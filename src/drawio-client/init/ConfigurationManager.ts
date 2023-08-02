@@ -242,6 +242,12 @@ export interface DrawioConfig {
    * will apply the default colors.
    */
   styles?: Array<{} | DrawioStyles>;
+
+  zoomWheel?: boolean;
+
+  sidebarWidth?: number;
+
+  simpleViewer?: boolean;
 }
 
 const defaultConfiguration: DrawioConfig = {
@@ -403,6 +409,8 @@ export class ConfigurationManager {
         //   },
         // },
       ],
+      zoomWheel: true,
+      sidebarWidth: 0,
     };
   }
 
