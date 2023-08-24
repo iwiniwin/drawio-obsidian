@@ -69,7 +69,7 @@ export default class DiagramPlugin extends Plugin {
     addIcon("create-new-diagram", newDiagramIconSvgContent);
     this.registerViewFactory(DiagramView, DIAGRAM_VIEW_TYPE);
     this.registerViewFactory(DiagramEditView, DIAGRAM_EDIT_VIEW_TYPE);
-    this.registerExtensionsReplace(["svg"], DIAGRAM_VIEW_TYPE);
+    this.registerExtensionsReplace(["svg"], DIAGRAM_EDIT_VIEW_TYPE);
     this.registerExtensionsReplace(["drawio"], DIAGRAM_EDIT_VIEW_TYPE);
     this.registerEvents();
     this.addSettingTab(new DiagramSettingsTab(this.app, this));

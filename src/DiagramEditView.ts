@@ -24,9 +24,9 @@ export class DiagramEditView extends DiagramViewBase {
 
   async onload() {
     super.onload();
-    this.addAction("image-file", "Preview", () => {
-      this.setImageView();
-    });
+    // this.addAction("image-file", "Preview", () => {
+    //   this.setImageView();
+    // });
 
     this.contentEl.style.margin = "0";
     this.contentEl.style.padding = "0";
