@@ -85,8 +85,6 @@ export interface DrawioUrlParams {
    * Sets the default pageVisible to false.
    */
   pv?: "0";
-
-  grid?: "0";
 }
 
 export interface DrawioResource {
@@ -286,7 +284,6 @@ const defaultUrlParams: DrawioUrlParams = {
   dark: "0",
   rough: "1",
   sketch: "1",
-  grid: "0",
 };
 
 export class ConfigurationManager {
