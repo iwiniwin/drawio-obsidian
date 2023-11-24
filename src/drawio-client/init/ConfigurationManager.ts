@@ -406,7 +406,7 @@ export class ConfigurationManager {
         //   },
         // },
       ],
-      zoomWheel: true,
+      zoomWheel: settings.zoomWheel,
       sidebarWidth: 0,
     };
   }

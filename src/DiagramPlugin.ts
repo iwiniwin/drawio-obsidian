@@ -24,6 +24,7 @@ import {
   Notice,
   EditableFileView,
   KeymapContext,
+  Platform,
 } from "obsidian";
 import DiagramView from "./DiagramView";
 import {
@@ -200,6 +201,7 @@ export default class DiagramPlugin extends Plugin {
     if (typeof configuration.theme.dark !== "boolean") {
       configuration.theme.dark = this.isAppThemeDark();
     }
+    configuration.zoomWheel = !Platform.isMacOS;
     return configuration;
   }
 
