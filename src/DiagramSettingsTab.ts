@@ -88,5 +88,35 @@ export default class DiagramSettingsTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           });
       });
+
+    new Setting(containerEl)
+      .setName("Zoom Wheel")
+      .setDesc("Use zoom wheel")
+      .addDropdown((component) => {
+        component
+          .addOptions({
+            followPlatform: "Follow Platform",
+            enable: "Enable",
+            disabled: "Disable",
+          })
+          .setValue(
+            mapBooleanString(
+              this.plugin.settings.zoomWheel,
+              "enable",
+              "disabled",
+              "followPlatform"
+            )
+          )
+          .onChange(async (value) => {
+            if (value === "enable") {
+              this.plugin.settings.zoomWheel = true;
+            } else if (value === "disabled") {
+              this.plugin.settings.zoomWheel = false;
+            } else {
+              this.plugin.settings.zoomWheel = undefined;
+            }
+            await this.plugin.saveSettings();
+          });
+      });
   }
 }

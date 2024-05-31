@@ -201,7 +201,9 @@ export default class DiagramPlugin extends Plugin {
     if (typeof configuration.theme.dark !== "boolean") {
       configuration.theme.dark = this.isAppThemeDark();
     }
-    configuration.zoomWheel = !Platform.isMacOS;
+    if (typeof configuration.zoomWheel !== "boolean") {
+      configuration.zoomWheel = !Platform.isMacOS;
+    }
     return configuration;
   }
 
