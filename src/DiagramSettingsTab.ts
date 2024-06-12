@@ -71,7 +71,7 @@ export default class DiagramSettingsTab extends PluginSettingTab {
             } else if (value === "light") {
               this.plugin.settings.theme.dark = false;
             } else {
-              this.plugin.settings.theme.dark = undefined;
+              this.plugin.settings.theme.dark = null;
             }
             await this.plugin.saveSettings();
           });
@@ -113,7 +113,7 @@ export default class DiagramSettingsTab extends PluginSettingTab {
             } else if (value === "disabled") {
               this.plugin.settings.zoomWheel = false;
             } else {
-              this.plugin.settings.zoomWheel = undefined;
+              this.plugin.settings.zoomWheel = null;
             }
             await this.plugin.saveSettings();
           });
